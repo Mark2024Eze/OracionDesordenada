@@ -6,7 +6,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'poppins', sans-serif;
       background-color: #f4f4f9;
       margin: 0;
       padding: 0;
@@ -29,30 +29,28 @@
       z-index: -1;
     }
 
-   .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-  background-color: transparent;
-  position: relative;
-}
-
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      background-color: transparent;
+      position: relative;
+    }
 
     .header img {
-      max-width: 120px;
+      max-width: 80px;
       margin-right: 20px;
     }
 
-   .header .title {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.5em;
-  color: #004d99;
-  text-align: center;
-}
-
+    .header .title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5em;
+      color: #004d99;
+      text-align: center;
+    }
 
     .content {
       padding: 20px;
@@ -63,17 +61,44 @@
 
     .sentence-container {
       margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .sentence-number {
+      font-weight: bold;
+      color: #004d99;
+      font-size: 1.2em;
+      min-width: 30px;
     }
 
     .dropzone {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      min-height: 40px;
-      border-bottom: 2px solid #a3c2f1;
-      border-radius: 0;
-      padding: 10px 0;
-      background-color: transparent;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 5px;
+  border: none; /* 🔴 Oculta el borde punteado */
+  border-bottom: 2px solid #007BFF; /* 🔵 Línea azul tipo renglón */
+  min-height: 40px;
+  margin-bottom: 10px;
+  background-color: transparent; /* Asegura que no haya fondo */
+}
+
+
+
+    .dropzone::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .dropzone::-webkit-scrollbar-thumb {
+      background: #004d99;
+      border-radius: 3px;
+    }
+
+    .dropzone {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
     .word {
@@ -83,6 +108,8 @@
       padding: 8px 12px;
       cursor: move;
       user-select: none;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .word.correct {
@@ -96,12 +123,11 @@
     }
 
     .word.dragging {
-  opacity: 0.7;
-  background-color: #ffeeba;
-  border-color: #ffc107;
-  transition: transform 0.2s ease;
-}
-
+      opacity: 0.7;
+      background-color: #ffeeba;
+      border-color: #ffc107;
+      transition: transform 0.2s ease;
+    }
 
     button {
       padding: 10px 15px;
@@ -123,20 +149,6 @@
       margin-top: 20px;
     }
 
-    .sentence-container {
-     margin-bottom: 20px;
-     display: flex;
-     align-items: flex-start;
-     gap: 10px;
-    }
-
-    .sentence-number {
-     font-weight: bold;
-     color: #004d99;
-     font-size: 1.2em;
-      min-width: 30px;
-    }
-
   </style>
   <title>Ordena las oraciones</title>
 </head>
@@ -156,7 +168,6 @@
 
     <div class="resultado" id="resultado"></div>
   </div>
-
 
   <script>
     const sentences = [
@@ -190,18 +201,20 @@
       const shuffled = shuffleArray([...words]);
 
       const wrapper = document.createElement("div");
-wrapper.className = "sentence-container";
+      wrapper.className = "sentence-container";
 
-// Número de la oración
-const number = document.createElement("div");
-number.className = "sentence-number";
-number.textContent = (index + 1) + ".";
-wrapper.appendChild(number);
+      const number = document.createElement("div");
+      number.className = "sentence-number";
+      number.textContent = (index + 1) + ".";
+      wrapper.appendChild(number);
 
       wrapper.dataset.index = index;
 
       const dropzone = document.createElement("div");
       dropzone.className = "dropzone";
+
+      dropzone.dataset.index = index; // ← Agregá esta línea
+
       dropzone.dataset.correct = words.join(' ');
 
       shuffled.forEach(word => {
@@ -210,37 +223,10 @@ wrapper.appendChild(number);
         span.draggable = true;
         span.textContent = word;
 
-       // PC
-span.addEventListener("dragstart", (e) => {
-  e.dataTransfer.setData("text/plain", word);
-  span.classList.add("dragging");
-});
-
-span.addEventListener("dragend", () => {
-  span.classList.remove("dragging");
-});
-
-// Móviles
-span.addEventListener("touchstart", (e) => {
-  span.classList.add("dragging");
-  span.dataset.touching = "true";
-});
-
-span.addEventListener("touchend", (e) => {
-  span.classList.remove("dragging");
-  delete span.dataset.touching;
-});
-
-dropzone.addEventListener("touchmove", (e) => {
-  const dragging = document.querySelector(".dragging");
-  const touch = e.touches[0];
-  const dropzones = document.elementsFromPoint(touch.clientX, touch.clientY);
-  const targetDropzone = dropzones.find(el => el.classList.contains("dropzone"));
-  if (targetDropzone && dragging && dragging !== targetDropzone) {
-    targetDropzone.appendChild(dragging);
-  }
-});
-
+        span.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/plain", word);
+          span.classList.add("dragging");
+        });
 
         span.addEventListener("dragend", () => {
           span.classList.remove("dragging");
@@ -250,15 +236,23 @@ dropzone.addEventListener("touchmove", (e) => {
       });
 
       dropzone.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        const afterElement = getDragAfterElement(dropzone, e.clientX);
-        const dragging = document.querySelector(".dragging");
-        if (afterElement == null) {
-          dropzone.appendChild(dragging);
-        } else {
-          dropzone.insertBefore(dragging, afterElement);
-        }
-      });
+  e.preventDefault();
+  const dragging = document.querySelector(".dragging");
+  if (!dragging) return;
+
+  const sourceIndex = dragging.closest(".sentence-container")?.dataset.index;
+  const targetIndex = dropzone.closest(".sentence-container")?.dataset.index;
+
+  if (sourceIndex !== targetIndex) return; // No permitir mover entre líneas
+
+  const afterElement = getDragAfterElement(dropzone, e.clientX);
+  if (afterElement == null) {
+    dropzone.appendChild(dragging);
+  } else {
+    dropzone.insertBefore(dragging, afterElement);
+  }
+});
+
 
       wrapper.appendChild(dropzone);
       container.appendChild(wrapper);
@@ -307,56 +301,7 @@ dropzone.addEventListener("touchmove", (e) => {
       document.getElementById("resultado").textContent = "";
     }
 
-    // Inicializar
     resetAll();
-
-
-    // Soporte para touch en móviles
-document.addEventListener("touchstart", function (e) {
-  const touched = e.target.closest(".word");
-  if (!touched) return;
-
-  const clone = touched.cloneNode(true);
-  clone.style.position = "absolute";
-  clone.style.pointerEvents = "none";
-  clone.style.zIndex = "1000";
-  clone.style.opacity = "0.7";
-  clone.classList.add("dragging");
-
-  document.body.appendChild(clone);
-
-  const moveAt = (touch) => {
-    clone.style.left = touch.pageX - clone.offsetWidth / 2 + "px";
-    clone.style.top = touch.pageY - clone.offsetHeight / 2 + "px";
-  };
-
-  const touchMoveHandler = (e) => {
-    moveAt(e.touches[0]);
-  };
-
-  const touchEndHandler = (e) => {
-    const dropzone = document.elementFromPoint(
-      e.changedTouches[0].clientX,
-      e.changedTouches[0].clientY
-    )?.closest(".dropzone");
-
-    if (dropzone) {
-      dropzone.appendChild(touched);
-    }
-
-    clone.remove();
-    document.removeEventListener("touchmove", touchMoveHandler);
-    document.removeEventListener("touchend", touchEndHandler);
-  };
-
-  moveAt(e.touches[0]);
-  document.addEventListener("touchmove", touchMoveHandler);
-  document.addEventListener("touchend", touchEndHandler, { once: true });
-
-  e.preventDefault();
-}, { passive: false });
-
-
   </script>
 </body>
 </html>
