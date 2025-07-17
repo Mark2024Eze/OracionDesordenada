@@ -201,9 +201,37 @@ wrapper.appendChild(number);
         span.draggable = true;
         span.textContent = word;
 
-        span.addEventListener("dragstart", (e) => {
-          e.dataTransfer.setData("text/plain", word);
-          span.classList.add("dragging");
+        // PC
+span.addEventListener("dragstart", (e) => {
+  e.dataTransfer.setData("text/plain", word);
+  span.classList.add("dragging");
+});
+
+span.addEventListener("dragend", () => {
+  span.classList.remove("dragging");
+});
+
+// Móviles
+span.addEventListener("touchstart", (e) => {
+  span.classList.add("dragging");
+  span.dataset.touching = "true";
+});
+
+span.addEventListener("touchend", (e) => {
+  span.classList.remove("dragging");
+  delete span.dataset.touching;
+});
+
+dropzone.addEventListener("touchmove", (e) => {
+  const dragging = document.querySelector(".dragging");
+  const touch = e.touches[0];
+  const dropzones = document.elementsFromPoint(touch.clientX, touch.clientY);
+  const targetDropzone = dropzones.find(el => el.classList.contains("dropzone"));
+  if (targetDropzone && dragging && dragging !== targetDropzone) {
+    targetDropzone.appendChild(dragging);
+  }
+
+
         });
 
         span.addEventListener("dragend", () => {
