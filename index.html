@@ -74,16 +74,27 @@
     }
 
     .dropzone {
-  display: inline-flex;
+  display: flex; /* ⬅️ más compatible con móviles */
   flex-wrap: wrap;
   gap: 5px;
   padding: 5px;
-  border: none; /* 🔴 Oculta el borde punteado */
-  border-bottom: 2px solid #007BFF; /* 🔵 Línea azul tipo renglón */
+  border: none; /* Quita el borde punteado */
+  position: relative;
   min-height: 40px;
   margin-bottom: 10px;
-  background-color: transparent; /* Asegura que no haya fondo */
 }
+
+/* Línea azul debajo como "renglón" */
+.dropzone::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: #007BFF; /* Azul */
+}
+
 
 
 
