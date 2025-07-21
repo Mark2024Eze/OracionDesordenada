@@ -231,9 +231,11 @@
       shuffled.forEach(word => {
         const span = document.createElement("span");
         span.className = "word";
+span.textContent = word; // ⬅️ ESTA LÍNEA ES LA CLAVE
+
 
         span.draggable = true;
-span.textContent = word;
+
 
 // Eventos para escritorio
 span.addEventListener("dragstart", (e) => {
@@ -254,19 +256,21 @@ span.addEventListener("touchstart", (e) => {
 
 span.addEventListener("touchmove", (e) => {
   const touch = e.touches[0];
-  const el = document.elementFromPoint(touch.clientX, touch.clientY);
   const dragging = document.querySelector(".dragging");
+  if (!dragging) return;
 
-  if (el && el.classList.contains("word") && el !== dragging) {
-    const dropzone = el.parentElement;
+  const dropzone = dragging.parentElement;
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+
+  if (el && el.classList.contains("word") && el !== dragging && el.parentElement === dropzone) {
     const words = [...dropzone.querySelectorAll(".word:not(.dragging)")];
-
     const index = words.indexOf(el);
     if (index !== -1) {
       dropzone.insertBefore(dragging, el);
     }
   }
 });
+
 
 span.addEventListener("touchend", () => {
   span.classList.remove("dragging");
