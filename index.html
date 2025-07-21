@@ -231,17 +231,46 @@
       shuffled.forEach(word => {
         const span = document.createElement("span");
         span.className = "word";
+
         span.draggable = true;
-        span.textContent = word;
 
-        span.addEventListener("dragstart", (e) => {
-          e.dataTransfer.setData("text/plain", word);
-          span.classList.add("dragging");
-        });
+// Eventos para escritorio
+span.addEventListener("dragstart", (e) => {
+  e.dataTransfer.setData("text/plain", word);
+  span.classList.add("dragging");
+});
 
-        span.addEventListener("dragend", () => {
-          span.classList.remove("dragging");
-        });
+span.addEventListener("dragend", () => {
+  span.classList.remove("dragging");
+});
+
+// Eventos para móviles (touch)
+span.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  span.classList.add("dragging");
+  span.touchStartX = e.touches[0].clientX;
+});
+
+span.addEventListener("touchmove", (e) => {
+  const touch = e.touches[0];
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  const dragging = document.querySelector(".dragging");
+
+  if (el && el.classList.contains("word") && el !== dragging) {
+    const dropzone = el.parentElement;
+    const words = [...dropzone.querySelectorAll(".word:not(.dragging)")];
+
+    const index = words.indexOf(el);
+    if (index !== -1) {
+      dropzone.insertBefore(dragging, el);
+    }
+  }
+});
+
+span.addEventListener("touchend", () => {
+  span.classList.remove("dragging");
+});
+
 
         dropzone.appendChild(span);
       });
