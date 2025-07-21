@@ -133,13 +133,16 @@
       border-color: #dc3545;
     }
 
-   .word.dragging {
-  opacity: 0.5;
-  background-color: #cce5ff;
-  scale: 1.1;
-  z-index: 10;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  .word.dragging {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.8;
+  background-color: #d0eaff;
+  transform: scale(1.1);
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
+
 
 
     button {
