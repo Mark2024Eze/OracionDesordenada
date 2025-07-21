@@ -247,6 +247,11 @@ span.addEventListener("dragend", () => {
   span.classList.remove("dragging");
 });
 
+        // Soporte touch para móviles
+span.addEventListener("touchstart", handleTouchStart);
+span.addEventListener("touchmove", handleTouchMove);
+span.addEventListener("touchend", handleTouchEnd);
+
 // Eventos para móviles (touch)
 span.addEventListener("touchstart", (e) => {
   e.preventDefault();
@@ -345,6 +350,32 @@ span.addEventListener("touchend", () => {
       sentences.forEach((s, i) => createSentence(s, i));
       document.getElementById("resultado").textContent = "";
     }
+
+    let touchedElement = null;
+
+function handleTouchStart(e) {
+  touchedElement = e.target;
+  touchedElement.classList.add("dragging");
+  e.stopPropagation();
+}
+
+function handleTouchMove(e) {
+  const touch = e.touches[0];
+  const dropzone = touchedElement.closest(".dropzone");
+  const afterElement = getDragAfterElement(dropzone, touch.clientX);
+  if (afterElement == null) {
+    dropzone.appendChild(touchedElement);
+  } else {
+    dropzone.insertBefore(touchedElement, afterElement);
+  }
+}
+
+function handleTouchEnd(e) {
+  if (touchedElement) {
+    touchedElement.classList.remove("dragging");
+    touchedElement = null;
+  }
+}
 
     resetAll();
   </script>
