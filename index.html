@@ -74,7 +74,7 @@
     }
 
     .dropzone {
-  display: flex; /* ⬅️ más compatible con móviles */
+  display: flex; /* ⬅ más compatible con móviles */
   flex-wrap: wrap;
   gap: 5px;
   padding: 5px;
@@ -186,21 +186,22 @@
 
   <script>
     const sentences = [
-      "I do athletics every day.",
-      "I don’t do gymnastics.",
-      "Do I do exercise?",
-      "He does trampolining.",
-      "He doesn’t go swimming.",
-      "She drinks lemonade.",
-      "They play baseball.",
-      "We eat fruit.",
-      "Does she go rowing?",
-      "Does he go outdoors?",
-      "She doesn’t drink milk.",
-      "We don’t play badminton.",
-      "They don’t eat sweets.",
-      "Do we go mountain biking?",
-      "Do they play handball?"
+      "I play the piano in a band.",
+      "I don’t sing.",
+      "What do I play?",
+      "He never dances.",
+      "He doesn’t listen to rock music.",
+      "Does he play the violin?",
+      "We always dance to pop music.",
+      "We don’t play the recorder.",
+      "When do we perform?",
+      "They play the keyboard.",
+      "They don’t play the drums.",
+      "Do they do sport?",
+      "She sometimes plays classical music.",
+      "She doesn’t practise every day.",
+      "Where does she play video games?",
+      
     ];
 
     const container = document.getElementById("sentences");
@@ -212,7 +213,10 @@
     }
 
     function createSentence(sentence, index) {
-      const words = sentence.replace(/[.?]/g, '').split(' ');
+     const words = sentence
+  .replace(/\./g, '')  // elimina puntos
+  .match(/[\w’']+|\?/g);  // captura palabras con apóstrofes y signos de pregunta
+
       const shuffled = shuffleArray([...words]);
 
       const wrapper = document.createElement("div");
@@ -235,7 +239,7 @@
       shuffled.forEach(word => {
         const span = document.createElement("span");
         span.className = "word";
-span.textContent = word; // ⬅️ ESTA LÍNEA ES LA CLAVE
+span.textContent = word; // ⬅ ESTA LÍNEA ES LA CLAVE
 
 
         span.draggable = true;
@@ -346,7 +350,7 @@ span.addEventListener("touchend", () => {
         if (userAnswer.join(' ') === correctAnswer.join(' ')) correct++;
       });
 
-      document.getElementById("resultado").textContent = `Correctas: ${correct} / ${total}`;
+      document.getElementById("resultado").textContent = Correctas: ${correct} / ${total};
     }
 
     function resetAll() {
