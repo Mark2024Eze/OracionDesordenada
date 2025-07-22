@@ -350,7 +350,8 @@ span.addEventListener("touchend", () => {
         if (userAnswer.join(' ') === correctAnswer.join(' ')) correct++;
       });
 
-      document.getElementById("resultado").textContent = Correctas: ${correct} / ${total};
+      document.getElementById("resultado").textContent = `Correctas: ${correct} / ${total}`;
+
     }
 
     function resetAll() {
